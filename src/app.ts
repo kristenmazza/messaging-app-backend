@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import { join } from 'path';
 import dotenv from 'dotenv';
 import initializeMongoDB from './setup/mongoConfig';
-
+import { userRouter } from './routes/user';
 dotenv.config();
 
 const port = process.env.PORT || 3000;
@@ -21,6 +21,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, 'public')));
 
+// Routes
+app.use('/users', userRouter);
+
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction): void => {
   console.error(err.stack);
@@ -31,8 +34,9 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
   res.send('hello');
 });
 
-app.listen(port, () =>
-  console.log(`Server running at http://localhost:${port}`)
-);
-
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+  });
+}
 export default app;
