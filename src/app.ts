@@ -6,6 +6,8 @@ import { join } from 'path';
 import dotenv from 'dotenv';
 import initializeMongoDB from './setup/mongoConfig';
 import { userRouter } from './routes/user';
+import { channelRouter } from './routes/channel';
+
 dotenv.config();
 
 const port = process.env.PORT || 3000;
@@ -23,6 +25,7 @@ app.use(express.static(join(__dirname, 'public')));
 
 // Routes
 app.use('/users', userRouter);
+app.use('/channels', channelRouter);
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction): void => {

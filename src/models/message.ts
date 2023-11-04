@@ -10,7 +10,7 @@ interface IMessage {
 const messageSchema = new Schema<IMessage>({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   channel: { type: Schema.Types.ObjectId, ref: 'Channel', required: true },
-  timestamp: { type: Date, required: true },
+  timestamp: { type: Date, default: Date.now },
   text: { type: String, required: true },
 });
 
