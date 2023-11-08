@@ -16,6 +16,7 @@ const userSchema = new Schema<IUser>({
     default:
       'https://kristen-mazza-blog-images.s3.us-west-1.amazonaws.com/uploads/80b13647-2c86-40ee-a300-80efde421dac-avatar.png',
   },
+  refreshToken: String,
 });
 
 export const User = model<IUser>('User', userSchema);
