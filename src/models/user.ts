@@ -1,10 +1,11 @@
 import { Schema, model } from 'mongoose';
 
 interface IUser {
-  displayName: String;
-  email: String;
-  password: String;
-  avatar: String;
+  displayName: string;
+  email: string;
+  password: string;
+  avatar: string;
+  refreshToken?: string;
 }
 
 const userSchema = new Schema<IUser>({

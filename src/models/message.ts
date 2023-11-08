@@ -1,10 +1,10 @@
 import { Schema, Types, model } from 'mongoose';
 
 interface IMessage {
-  user: String;
+  user: Types.ObjectId;
   channel: Types.ObjectId;
   timestamp: Date;
-  text: String;
+  text: string;
 }
 
 const messageSchema = new Schema<IMessage>({
