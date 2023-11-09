@@ -7,9 +7,22 @@ import { Channel } from '../../models/channel';
 import { User } from '../../models/user';
 
 const request = supertest(app);
+let token: string;
 
 beforeAll(async () => {
   await db.setUp();
+
+  const userData = {
+    displayName: 'Walter',
+    email: 'walt@gmail.com',
+    password: 'Aa$12345',
+    c_password: 'Aa$12345',
+  };
+
+  await request.post(`/register`).send(userData);
+
+  const response = await request.post('/auth').send(userData);
+  token = response.body.accessToken;
 });
 
 afterEach(async () => {
@@ -34,9 +47,11 @@ describe('Message controller', () => {
     const savedUserMessage = await userMessage.save();
 
     // Act
-    const response = await request.get(
-      `/channels/65307f43ede6531308401a6e/messages/${savedUserMessage._id}`
-    );
+    const response = await request
+      .get(
+        `/channels/65307f43ede6531308401a6e/messages/${savedUserMessage._id}`
+      )
+      .set('Authorization', `Bearer ${token}`);
 
     // Assert
     expect(response.status).toBe(200);
@@ -91,9 +106,9 @@ describe('Message controller', () => {
     ]);
 
     // Act
-    const response = await request.get(
-      '/channels/65307f43ede6531308401a70/messages/'
-    );
+    const response = await request
+      .get('/channels/65307f43ede6531308401a70/messages/')
+      .set('Authorization', `Bearer ${token}`);
 
     // Assert
     expect(response.status).toBe(200);
@@ -138,7 +153,8 @@ describe('Message controller', () => {
     // Act
     const response = await request
       .post('/channels/65307f43ede6531308401a70/messages/')
-      .send(messageData);
+      .send(messageData)
+      .set('Authorization', `Bearer ${token}`);
 
     // Assert
     expect(response.status).toBe(201);

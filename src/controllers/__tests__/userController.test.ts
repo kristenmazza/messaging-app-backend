@@ -4,9 +4,22 @@ import app from '../../app';
 import { User } from '../../models/user';
 
 const request = supertest(app);
+let token: string;
 
 beforeAll(async () => {
   await db.setUp();
+
+  const userData = {
+    displayName: 'Walter',
+    email: 'walt@gmail.com',
+    password: 'Aa$12345',
+    c_password: 'Aa$12345',
+  };
+
+  await request.post(`/register`).send(userData);
+
+  const response = await request.post('/auth').send(userData);
+  token = response.body.accessToken;
 });
 
 afterEach(async () => {
@@ -30,7 +43,9 @@ describe('User controller', () => {
     await user.save();
 
     // Act
-    const response = await request.get(`/users/${user._id}`);
+    const response = await request
+      .get(`/users/${user._id}`)
+      .set('Authorization', `Bearer ${token}`);
 
     // Assert
     expect(response.status).toBe(200);

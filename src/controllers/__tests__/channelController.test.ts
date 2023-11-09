@@ -7,9 +7,22 @@ import { User } from '../../models/user';
 import { Message } from '../../models/message';
 
 const request = supertest(app);
+let token: string;
 
 beforeAll(async () => {
   await db.setUp();
+
+  const userData = {
+    displayName: 'Walter',
+    email: 'walt@gmail.com',
+    password: 'Aa$12345',
+    c_password: 'Aa$12345',
+  };
+
+  await request.post(`/register`).send(userData);
+
+  const response = await request.post('/auth').send(userData);
+  token = response.body.accessToken;
 });
 
 afterEach(async () => {
@@ -55,7 +68,9 @@ describe('Channel controller', () => {
     ]);
 
     // Act
-    const response = await request.get(`/channels/65307f43ede6531308401a70`);
+    const response = await request
+      .get(`/channels/65307f43ede6531308401a70`)
+      .set('Authorization', `Bearer ${token}`);
 
     // Assert
     expect(response.status).toBe(200);
@@ -92,7 +107,10 @@ describe('Channel controller', () => {
     await Promise.all([user1.save(), user2.save()]);
 
     // Act
-    const response = await request.post(`/channels/`).send(participants);
+    const response = await request
+      .post(`/channels/`)
+      .send(participants)
+      .set('Authorization', `Bearer ${token}`);
 
     // Assert
     expect(response.status).toBe(201);
@@ -165,7 +183,9 @@ describe('Channel controller', () => {
     ]);
 
     // Act
-    const response = await request.get(`/channels`);
+    const response = await request
+      .get(`/channels`)
+      .set('Authorization', `Bearer ${token}`);
 
     // Assert
     expect(response.status).toBe(200);
