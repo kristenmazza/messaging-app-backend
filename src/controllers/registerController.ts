@@ -24,6 +24,7 @@ export const register_user = [
       minLowercase: 1,
       minUppercase: 1,
       minSymbols: 1,
+      minNumbers: 0,
       returnScore: false,
       pointsPerUnique: 1,
       pointsPerRepeat: 0.5,
