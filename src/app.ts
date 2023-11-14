@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 import path, { join } from 'path';
 import dotenv from 'dotenv';
 import initializeMongoDB from './setup/mongoConfig';
-import credentials from './middleware/credentials'
+import credentials from './middleware/credentials';
 import { userRouter } from './routes/user';
 import { channelRouter } from './routes/channel';
 import { registerRouter } from './routes/register';
@@ -24,7 +24,7 @@ initializeMongoDB();
 
 // Initialize middleware
 app.use(logger('dev'));
-app.use(credentials)
+app.use(credentials);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

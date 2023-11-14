@@ -18,6 +18,10 @@ export const logout = async (req: Request, res: Response) => {
   foundUser.refreshToken = '';
   const result = await foundUser.save();
 
-  res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true });
+  res.clearCookie('jwt', {
+    httpOnly: true,
+    sameSite: 'none',
+    secure: true,
+  });
   res.sendStatus(204);
 };
