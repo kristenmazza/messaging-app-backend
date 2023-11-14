@@ -5,4 +5,4 @@ export const userRouter: Router = Router();
 
 userRouter.get('/:userId', user_controller.user_detail);
 
-userRouter.put('/', user_controller.user_update);
+userRouter.put('/:userId', user_controller.user_update);

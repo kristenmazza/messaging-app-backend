@@ -28,10 +28,13 @@ export const user_detail = asyncHandler(
 export const user_update = asyncHandler(
   async (req: Request, res: Response): Promise<void> => {
     let user;
-    let email = req.body.email;
-    try {
-      user = await User.findOne({ email });
 
+    try {
+      if (!mongoose.isValidObjectId(req.params.userId)) {
+        res.status(404).json({ message: 'Cannot find user' });
+      }
+
+      user = await User.findById(req.params.userId);
       if (user === null) {
         res.status(404).json({ message: 'Cannot find user' });
       } else {
