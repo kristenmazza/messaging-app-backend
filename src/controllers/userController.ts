@@ -48,3 +48,17 @@ export const user_update = asyncHandler(
     res.status(200).json({ success: `Display name updated successfully` });
   }
 );
+
+export const user_list = asyncHandler(
+  async (req: Request, res: Response): Promise<void> => {
+    let users;
+    try {
+      users = await User.find({}).select('_id displayName avatar email');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      res.status(500).json({ message });
+    }
+
+    res.send(users);
+  }
+);
