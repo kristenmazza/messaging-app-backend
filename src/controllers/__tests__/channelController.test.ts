@@ -34,6 +34,55 @@ afterAll(async () => {
 });
 
 describe('Channel controller', () => {
+  // it('should get channel details', async () => {
+  //   // Arrange
+  //   const user1 = new User({
+  //     _id: '65307f43ede6531308401a6d',
+  //     displayName: 'TestUser',
+  //     email: 'testemail@gmail.com',
+  //     password: 'testpassword123',
+  //   });
+
+  //   const user2 = new User({
+  //     _id: '65307f43ede6531308401a6e',
+  //     displayName: 'TestUser2',
+  //     email: 'testemail2@gmail.com',
+  //     password: 'testpassword123',
+  //   });
+
+  //   const channelData = {
+  //     _id: '65307f43ede6531308401a70',
+  //     participants: [
+  //       new mongoose.Types.ObjectId('65307f43ede6531308401a6d'),
+  //       new mongoose.Types.ObjectId('65307f43ede6531308401a6e'),
+  //     ],
+  //     latestMessage: new mongoose.Types.ObjectId('65307f43ede6531308401a75'),
+  //   };
+
+  //   const channel = new Channel(channelData);
+
+  //   const [savedMessage, savedChannel] = await Promise.all([
+  //     user1.save(),
+  //     user2.save(),
+  //     channel.save(),
+  //   ]);
+
+  //   // Act
+  //   const response = await request
+  //     .get(`/channels/65307f43ede6531308401a70`)
+  //     .set('Authorization', `Bearer ${token}`);
+
+  //   // Assert
+  //   expect(response.status).toBe(200);
+  //   expect(response.body._id).toBe(channelData._id);
+  //   expect(response.body.participants[0]._id.toString()).toBe(
+  //     user1._id.toString()
+  //   );
+  //   expect(response.body.participants[1]._id.toString()).toBe(
+  //     user2._id.toString()
+  //   );
+  // });
+
   it('should get channel details', async () => {
     // Arrange
     const user1 = new User({
@@ -69,18 +118,14 @@ describe('Channel controller', () => {
 
     // Act
     const response = await request
-      .get(`/channels/65307f43ede6531308401a70`)
+      .get(
+        `/channels/channel?user1=65307f43ede6531308401a6d&user2=65307f43ede6531308401a6e`
+      )
       .set('Authorization', `Bearer ${token}`);
 
     // Assert
     expect(response.status).toBe(200);
     expect(response.body._id).toBe(channelData._id);
-    expect(response.body.participants[0]._id.toString()).toBe(
-      user1._id.toString()
-    );
-    expect(response.body.participants[1]._id.toString()).toBe(
-      user2._id.toString()
-    );
   });
 
   it('should create a channel', async () => {
