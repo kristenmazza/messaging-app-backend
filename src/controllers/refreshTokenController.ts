@@ -23,7 +23,7 @@ export const handle_refresh_token = async (req: Request, res: Response) => {
           email: decoded.email,
         },
         process.env.ACCESS_TOKEN_SECRET as string,
-        { expiresIn: '30s' }
+        { expiresIn: '7d' }
       );
       res.json({ accessToken });
     }

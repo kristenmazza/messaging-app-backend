@@ -23,18 +23,21 @@ export const login_user = async (req: Request, res: Response) => {
       const accessToken = jwt.sign(
         { email: foundUser.email },
         process.env.ACCESS_TOKEN_SECRET as string,
-        { expiresIn: '30s' }
+        { expiresIn: '60m' }
       );
 
       const refreshToken = jwt.sign(
         { email: foundUser.email },
         process.env.REFRESH_TOKEN_SECRET as string,
-        { expiresIn: '1d' }
+        { expiresIn: '7d' }
       );
 
       // Saves refreshToken with current user
       foundUser.refreshToken = refreshToken;
       const result = await foundUser.save();
+
+      const displayName = foundUser.displayName;
+      const id = foundUser._id;
 
       res.cookie('jwt', refreshToken, {
         httpOnly: true,
@@ -42,7 +45,7 @@ export const login_user = async (req: Request, res: Response) => {
         secure: true,
         maxAge: 24 * 60 * 60 * 1000,
       });
-      res.json({ accessToken });
+      res.json({ accessToken, displayName, id });
     } else {
       res.status(401).json({ message: 'Invalid credentials' });
     }
