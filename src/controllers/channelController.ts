@@ -1,32 +1,6 @@
 import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import { Channel } from '../models/channel';
-import mongoose from 'mongoose';
-
-// // Get channel details
-// export const channel_detail = asyncHandler(
-//   async (req: Request, res: Response): Promise<void> => {
-//     let channel;
-//     try {
-//       if (!mongoose.isValidObjectId(req.params.channelId)) {
-//         res.status(404).json({ message: 'Cannot find channel' });
-//       }
-
-//       channel = await Channel.findById(req.params.channelId)
-//         .populate('participants')
-//         .populate('latestMessage');
-
-//       if (!channel) {
-//         res.status(404).json({ message: 'Cannot find channel' });
-//       }
-//     } catch (err) {
-//       const message = err instanceof Error ? err.message : String(err);
-//       res.status(500).json({ message });
-//     }
-
-//     res.send(channel);
-//   }
-// );
 
 // Get channel details
 export const channel_detail = asyncHandler(
@@ -43,7 +17,7 @@ export const channel_detail = asyncHandler(
 
       channel = await Channel.findOne({
         participants: { $all: [user1, user2] },
-      }).populate('latestMessage');
+      }).populate('participants', 'latestMessage');
 
       if (channel) {
         response.channelExists = true;
@@ -80,7 +54,7 @@ export const channel_create = asyncHandler(
 export const channel_list = asyncHandler(
   async (req: Request, res: Response): Promise<void> => {
     try {
-      const channels = await Channel.aggregate([
+      let channels = await Channel.aggregate([
         {
           $lookup: {
             from: 'message',
@@ -102,6 +76,13 @@ export const channel_list = asyncHandler(
           },
         },
       ]);
+
+      const populateQuery = [
+        { path: 'participants', select: '_id displayName avatar' },
+        { path: 'latestMessage' },
+      ];
+
+      channels = await Channel.populate(channels, populateQuery);
 
       if (!channels || channels.length === 0) {
         res.status(404).json({ message: 'Channels not found' });

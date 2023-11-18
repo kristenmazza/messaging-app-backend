@@ -8,7 +8,6 @@ channelRouter.post('/', channel_controller.channel_create);
 
 channelRouter.get('/', channel_controller.channel_list);
 
-// channelRouter.get('/:channelId/', channel_controller.channel_detail);
 channelRouter.get('/channel', channel_controller.channel_detail);
 
 channelRouter.get(
