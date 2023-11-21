@@ -51,7 +51,7 @@ export const message_list = asyncHandler(
           channel: channel._id,
         })
           .populate('user')
-          .sort({ timestamp: 1 });
+          .sort({ timestamp: -1 });
 
         if (!conversation) {
           res.status(404).json({ message: 'Cannot find conversation' });
