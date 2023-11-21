@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import { Channel } from '../models/channel';
+import mongoose from 'mongoose';
 
 // Get channel details
 export const channel_detail = asyncHandler(
@@ -53,8 +54,16 @@ export const channel_create = asyncHandler(
 // Get list of channels
 export const channel_list = asyncHandler(
   async (req: Request, res: Response): Promise<void> => {
+    const currentUserId = req.query.currentUserId as string;
+    const id = new mongoose.Types.ObjectId(currentUserId);
+
     try {
       let channels = await Channel.aggregate([
+        {
+          $match: {
+            participants: id,
+          },
+        },
         {
           $lookup: {
             from: 'message',
@@ -72,7 +81,6 @@ export const channel_list = asyncHandler(
         {
           $sort: {
             'latestMessageDetails.timestamp': 1,
-            timestamp: 1,
           },
         },
       ]);
@@ -86,6 +94,7 @@ export const channel_list = asyncHandler(
 
       if (!channels || channels.length === 0) {
         res.status(404).json({ message: 'Channels not found' });
+        return;
       }
 
       res.send(channels);
