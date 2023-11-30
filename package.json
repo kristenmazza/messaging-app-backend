@@ -37,7 +37,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb-memory-server": "^9.0.1",
     "mongoose": "^8.0.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "socket.io": "^4.7.2"
   },
   "devDependencies": {
     "@flydotio/dockerfile": "^0.4.10",

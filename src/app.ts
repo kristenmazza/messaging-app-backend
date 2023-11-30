@@ -14,11 +14,14 @@ import { authRouter } from './routes/auth';
 import { refreshTokenRouter } from './routes/refresh';
 import { logoutRouter } from './routes/logout';
 import verifyJWT from './middleware/verifyJWT';
+import { createServer } from 'node:http';
+import { Server } from 'socket.io';
 
 dotenv.config();
 
 const port = process.env.PORT || 3000;
 const app: Application = express();
+const server = createServer(app);
 
 initializeMongoDB();
 
@@ -31,9 +34,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, 'public')));
 
+const io = new Server(server, {
+  cors: corsOptions,
+});
+
+io.on('connection', (socket) => {
+  socket.on('send-message', (message) => {
+    io.emit('receive-message', message);
+  });
+});
+
 // Routes
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
-  res.send('hello');
+  res.send('Index');
 });
 app.use('/register', registerRouter);
 app.use('/auth', authRouter);
@@ -62,8 +75,9 @@ app.all('*', (req: Request, res: Response) => {
 });
 
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(port, () => {
+  server.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
   });
 }
+
 export default app;
