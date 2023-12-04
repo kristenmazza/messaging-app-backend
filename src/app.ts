@@ -16,6 +16,7 @@ import { logoutRouter } from './routes/logout';
 import verifyJWT from './middleware/verifyJWT';
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
+import sockets from './socket/sockets';
 
 dotenv.config();
 
@@ -34,15 +35,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, 'public')));
 
+// Socket.io
 const io = new Server(server, {
   cors: corsOptions,
 });
-
-io.on('connection', (socket) => {
-  socket.on('send-message', (message) => {
-    io.emit('receive-message', message);
-  });
-});
+io.on('connection', sockets);
 
 // Routes
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
