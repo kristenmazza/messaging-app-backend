@@ -19,9 +19,10 @@ Live demo: https://km-messaging-app.netlify.app/ :point_left:
 2. Run `npm install` to install the necessary dependencies.
 3. Configure your database connection in the `.env` file by adding the following variable:
    - `MONGODB_URI=Your MongoDB connection string`
+4. Add additional variables in the `.env` file for authentication purposes:
    - `ACCESS_TOKEN_SECRET=Generated access token`
    - `REFRESH_TOKEN_SECRET=Generated refresh token`
-4. Use `npm run dev` to start the server in development mode.
+5. Use `npm run dev` to start the server in development mode.
 
 ## Deployment to Fly.io
 
